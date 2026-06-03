@@ -1,0 +1,23 @@
+<div class="container">
+  <h2>{{ isEdit ? 'Edit Result' : 'Add Result' }}</h2>
+
+  <form (ngSubmit)="save()" novalidate>
+    <div class="form-group">
+      <label>User ID</label>
+      <input [(ngModel)]="result.userId" name="userId" type="number" />
+    </div>
+    <div class="form-group">
+      <label>Quiz ID</label>
+      <input [(ngModel)]="result.quizId" name="quizId" type="number" />
+    </div>
+    <div class="form-group">
+      <label>Score</label>
+      <input [(ngModel)]="result.score" name="score" type="number" />
+    </div>
+
+    <div class="btn-row">
+      <button type="submit">{{ isEdit ? 'Update' : 'Save' }}</button>
+      <a routerLink="/results">Cancel</a>
+    </div>
+  </form>
+</div>

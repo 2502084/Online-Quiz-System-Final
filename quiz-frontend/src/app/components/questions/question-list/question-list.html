@@ -1,0 +1,37 @@
+<div class="container">
+  <div class="header">
+    <h2>❓ Questions</h2>
+    <a routerLink="/questions/add" class="btn-add">+ Add Question</a>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Quiz ID</th>
+        <th>Question</th>
+        <th>A</th><th>B</th><th>C</th><th>D</th>
+        <th>Answer</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-container *ngFor="let q of questions">
+        <tr>
+          <td>{{ q.id }}</td>
+          <td>{{ q.quizId }}</td>
+          <td>{{ q.questionText }}</td>
+          <td>{{ q.optionA }}</td>
+          <td>{{ q.optionB }}</td>
+          <td>{{ q.optionC }}</td>
+          <td>{{ q.optionD }}</td>
+          <td><strong>{{ q.correctAnswer }}</strong></td>
+          <td>
+            <a [routerLink]="['/questions/edit', q.id]" class="btn-edit">Edit</a>
+            <button (click)="delete(q.id!)" class="btn-delete">Delete</button>
+          </td>
+        </tr>
+      </ng-container>
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,27 @@
+<div class="container">
+  <div class="header">
+    <h2>Users</h2>
+    <a routerLink="/users/add" class="btn-add">+ Add User</a>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th><th>Name</th><th>Email</th><th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-container *ngFor="let user of users">
+        <tr>
+          <td>{{ user.id }}</td>
+          <td>{{ user.name }}</td>
+          <td>{{ user.email }}</td>
+          <td>
+            <a [routerLink]="['/users/edit', user.id]" class="btn-edit">Edit</a>
+            <button (click)="delete(user.id!)" class="btn-delete">Delete</button>
+          </td>
+        </tr>
+      </ng-container>
+    </tbody>
+  </table>
+</div>
