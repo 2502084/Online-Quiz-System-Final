@@ -1,50 +1,43 @@
 var builder = WebApplication.CreateBuilder(args);
+
+// Port configuration for Cloud Deployment (Render/Railway)
 var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
 builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
 
+// Add services to the container
 builder.Services.AddControllers();
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowAll", builder =>
-    {
-        builder.AllowAnyOrigin()
-               .AllowAnyMethod()
-               .AllowAnyHeader();
-    });
-});
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// CORS add karo yahan
-builder.Services.AddCors(options => {
-    options.AddPolicy("AllowAngular", policy => {
-        policy.WithOrigins("http://localhost:4200", "https://localhost:4200")
-              .AllowAnyHeader()
-              .AllowAnyMethod();
+// CORS Policy Setup (Allows frontend to connect easily)
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader();
     });
 });
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
+// Enable Swagger for testing endpoints (always enabled for easy testing)
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Quiz Management API v1");
+    c.RoutePrefix = string.Empty; // Yeh link kholte hi direct Swagger UI khol dega
+});
 
+// Middleware pipeline (Order is very important here)
+app.UseRouting();
 
-// CORS yahan lagao — UseAuthorization se PEHLE
-app.UseCors("AllowAngular");
-
-app.UseAuthorization();
+// 1. CORS hamesha Authorization se pehle aana chahiye
 app.UseCors("AllowAll");
 
-app.MapControllers();
-app.UseHttpsRedirection();
-
 app.UseAuthorization();
 
 app.MapControllers();
-
 
 app.Run();
