@@ -2,11 +2,10 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-# Copy the entire backend folder into the container
-COPY QuizManagemant.API/ ./QuizManagemant.API/
+# Copy everything from the root directory
+COPY . .
 
-# Move into the folder and restore dependencies
-WORKDIR /src/QuizManagemant.API
+# Restore dependencies and publish
 RUN dotnet restore
 RUN dotnet publish -c Release -o /app/out
 
@@ -15,8 +14,8 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
 COPY --from=build /app/out .
 
-# Copy SQLite database file if it exists in the folder
-COPY QuizManagemant.API/*.db ./ 2>/dev/null || :
+# Copy SQLite database file if it exists
+COPY *.db ./ 2>/dev/null || :
 
 EXPOSE 8080
 ENTRYPOINT ["dotnet", "QuizManagemant.API.dll"]
