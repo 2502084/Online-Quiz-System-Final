@@ -33,12 +33,24 @@ if (app.Environment.IsDevelopment())
 }
 
 
-// CORS yahan lagao — UseAuthorization se PEHLE
+// CORS yahan lagao â€” UseAuthorization se PEHLE
 app.UseCors("AllowAngular");
 
 app.UseAuthorization();
 app.UseCors("AllowAll");
 
 app.MapControllers();
-
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var context = services.GetRequiredService<YourDbContextName>(); // Apne DbContext ka asal naam likhein
+        context.Database.EnsureCreated(); // Yeh khud hi table bana dega agar nahi bane hue
+    }
+    catch (Exception ex)
+    {
+        // Log error if needed
+    }
+}
 app.Run();
